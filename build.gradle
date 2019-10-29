@@ -1,0 +1,27 @@
+
+repositories {
+    mavenCentral()
+}
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.owasp:dependency-check-gradle:5.2.2'
+    }
+}
+
+apply plugin: 'java'
+
+apply plugin: 'org.owasp.dependencycheck'
+dependencyCheck {
+    suppressionFile = file('dep-vulnerabilities-suppressions.xml')
+    scanConfigurations = configurations.findAll {it.name.startsWithAny('runtime', 'Runtime')}.collect {it.name }
+    failBuildOnCVSS 0
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+dependencies {
+    implementation "io.projectreactor.netty:reactor-netty:0.9.0.RELEASE"
+}
